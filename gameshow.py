@@ -12,13 +12,18 @@ def create_question_sheet(questions):
 
 
 def write_current_question(question_sheet):
-  f = open("gameshow_question", "w")
+  q_file = open("gameshow_question", "w")
+  a_file = open("gameshow_answer", "w")
+  print("question_sheet_current:", question_sheet['current'])
+  q_number = question_sheet['current'] + 1
+  print("question_sheet_current again:", question_sheet['current'])
   current_question = question_sheet["list"][question_sheet['current']]
-  text = ""
-  text += f"{current_question['q']}\n\n"
-  text += f"Answer: {current_question['a']}"
-  f.write(text)
-  f.close()
+  question_text = f"{q_number}. {current_question['q']}\n\n"
+  answer_text = f"Answer: {current_question['a']}"
+  q_file.write(question_text)
+  a_file.write(answer_text)
+  q_file.close()
+  a_file.close()
 
 
 def create_scoreboard(players):
@@ -60,18 +65,18 @@ def main():
   while cmd != "exit":
     cmds = cmd.split(" ")
     try:
-      if (cmds[0] == "next"):
+      if (cmds[0] == "next" or cmds[0] == "n"):
         if question_sheet["current"] < len(question_sheet["list"]) - 1:
           question_sheet["current"] += 1
+          write_current_question(question_sheet)
         else:
           print("End of questions!")
-        write_current_question(question_sheet)
-      elif (cmds[0] == "back"):
+      elif (cmds[0] == "back" or cmds[0] == "b"):
         if question_sheet["current"] > 0:
           question_sheet["current"] -= 1
+          write_current_question(question_sheet)
         else:
           print("At start of questions!")
-        write_current_question(question_sheet)
       elif (cmds[0] == "add"):
         set_player_score(scoreboard, cmds[1], scoreboard[cmds[1]]["score"] + int(cmds[2]))
         write_current_score(scoreboard)
